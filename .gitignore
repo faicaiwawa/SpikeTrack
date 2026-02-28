@@ -1,0 +1,25 @@
+# PyCharm / IDE
+.idea/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+#
+venv/
+env/
+.venv/
+
+#
+*.egg-info/
+dist/
+build/
+
+#
+.DS_Store
+Thumbs.db
+
+# 其他
+*.log
