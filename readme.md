@@ -1,5 +1,5 @@
  # SpikeTrack
-The official implementation for the **CVPR 2026** paper [_SpikeTrack: A Spike-driven Framework for Efficient Visual Tracking_].
+The official implementation for the **CVPR 2026** paper [_SpikeTrack: A Spike-driven Framework for Efficient Visual Tracking_](https://arxiv.org/abs/2602.23963).
 
 [[Models](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)] [[Raw Results](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)] [[Training logs](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)] [[SFR EXCEL](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)]
 
@@ -11,7 +11,7 @@ The official implementation for the **CVPR 2026** paper [_SpikeTrack: A Spike-dr
 ## Install the environment
 ```
 conda create -n spiketrack python=3.12
-conda activate spiktrack
+conda activate spiketrack
 bash install.sh
 ```
 
@@ -91,12 +91,22 @@ python lib/test/utils/transform_trackingnet.py --tracker_name spiketrack --cfg_n
 
 
 ## Acknowledgments
-* Thanks for the [SeqTrack] and [PyTracking] library, which helps us to quickly implement our ideas. 
+* Thanks for the [SeqTrack](https://github.com/microsoft/VideoX/blob/master/SeqTrack/README.md) and [PyTracking](https://github.com/visionml/pytracking) library, which helps us to quickly implement our ideas. 
 
 
 ## Citation
 If our work is useful for your research, please consider citing:
-
+```
+@misc{zhang2026spike,
+      title={SpikeTrack: A Spike-driven Framework for Efficient Visual Tracking}, 
+      author={Qiuyang Zhang and Jiujun Cheng and Qichao Mao and Cong Liu and Yu Fang and Yuhong Li and Mengying Ge and Shangce Gao},
+      year={2026},
+      eprint={2602.23963},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2602.23963}, 
+}
+```
 ## Contact
 If you have any question, feel free to email qyzhang@tongji.edu.cn. ^_^ 
 

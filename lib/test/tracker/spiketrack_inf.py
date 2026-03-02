@@ -20,6 +20,7 @@ class SpikeTrack(BaseTracker):
         super(SpikeTrack, self).__init__(params)
         network, encoder_temp = build_spiketrack(params.cfg)
         print("run at inference mode  !!!!!!!!!!!!!")
+        print("load checkpoint from : {}".format(checkpoint_path))
         res_1 = network.load_state_dict(torch.load(checkpoint_path, map_location='cpu')['net'], strict=False)
         state_dict = torch.load(checkpoint_path, map_location='cpu')['net']
         encoder_state_dict = {}
