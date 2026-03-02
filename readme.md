@@ -1,7 +1,7 @@
  # SpikeTrack
 The official implementation for the **CVPR 2026** paper [_SpikeTrack: A Spike-driven Framework for Efficient Visual Tracking_](https://arxiv.org/abs/2602.23963).
 
-[[Models](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)] [[Raw Results](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)] [[Training logs](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)] [[SFR EXCEL](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)]
+[[Models(GoogleDrive)](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)] [[Models(HuggingFace)](https://huggingface.co/facaiwawa/SpikeTrack)] [[Raw Results](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)] [[Training logs](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)] [[SFR EXCEL](https://drive.google.com/drive/folders/1G9DhjfhmiRz_9JxxlbHbOnuYZBAmhLOG?usp=sharing)]
 
 
 
