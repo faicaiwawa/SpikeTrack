@@ -106,6 +106,9 @@ python tracking/get_avg_sfr.py # need to modify folder address of the JSON file
 ```
 this script will calculate the average SFR  of all JSON files in the folder, so you can get the average SFR of the got10k_test set.
 
+note：if you modify the quantization limits in the neuron (the default value in this work is [0, 4]), then you need to modify the hook function for SFR.
+
+
 ## Acknowledgments
 * Thanks for the [SeqTrack](https://github.com/microsoft/VideoX/blob/master/SeqTrack/README.md) and [PyTracking](https://github.com/visionml/pytracking) library, which helps us to quickly implement our ideas. 
 
