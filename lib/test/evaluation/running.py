@@ -99,7 +99,7 @@ def _save_tracker_output(seq: Sequence, tracker: Tracker, output: dict):
                 save_time(timings_file, data)
 
 
-def run_sequence(seq: Sequence, tracker: Tracker, debug=False, num_gpu=8, checkpoint_path = '.'):
+def run_sequence(seq: Sequence, tracker: Tracker, debug=False, num_gpu=8, checkpoint_path = '.', save_sfr = False):
     """Runs a tracker on a sequence."""
     '''2021.1.2 Add multiple gpu support'''
     try:
@@ -130,10 +130,10 @@ def run_sequence(seq: Sequence, tracker: Tracker, debug=False, num_gpu=8, checkp
     print('Tracker: {} {} {} ,  Sequence: {}'.format(tracker.name, tracker.parameter_name, tracker.run_id, seq.name))
 
     if debug:
-        output = tracker.run_sequence(seq, debug=debug, checkpoint_path=checkpoint_path)
+        output = tracker.run_sequence(seq, debug=debug, checkpoint_path=checkpoint_path, save_sfr=save_sfr)
     else:
         try:
-            output = tracker.run_sequence(seq, debug=debug, checkpoint_path=checkpoint_path)
+            output = tracker.run_sequence(seq, debug=debug, checkpoint_path=checkpoint_path, save_sfr=save_sfr)
         except Exception as e:
             print(e)
             return
@@ -153,7 +153,7 @@ def run_sequence(seq: Sequence, tracker: Tracker, debug=False, num_gpu=8, checkp
         _save_tracker_output(seq, tracker, output)
 
 
-def run_dataset(dataset, trackers, debug=False, threads=0, num_gpus=8, checkpoint_path = '.'):
+def run_dataset(dataset, trackers, debug=False, threads=0, num_gpus=8, checkpoint_path = '.', save_sfr = False):
     """Runs a list of trackers on a dataset.
     args:
         dataset: List of Sequence instances, forming a dataset.
@@ -175,9 +175,9 @@ def run_dataset(dataset, trackers, debug=False, threads=0, num_gpus=8, checkpoin
     if mode == 'sequential':
         for seq in dataset:
             for tracker_info in trackers:
-                run_sequence(seq, tracker_info, debug=debug, checkpoint_path = checkpoint_path)
+                run_sequence(seq, tracker_info, debug=debug, checkpoint_path = checkpoint_path, save_sfr = save_sfr)
     elif mode == 'parallel':
-        param_list = [(seq, tracker_info, debug, num_gpus, checkpoint_path) for seq, tracker_info in product(dataset, trackers)]
+        param_list = [(seq, tracker_info, debug, num_gpus, checkpoint_path, save_sfr) for seq, tracker_info in product(dataset, trackers)]
         with multiprocessing.Pool(processes=threads) as pool:
             pool.starmap(run_sequence, param_list)
     print('Done')

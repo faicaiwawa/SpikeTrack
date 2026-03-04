@@ -495,6 +495,7 @@ class Spiking_vit_MetaFormer_Spike_SepConv(nn.Module):
             template_mode=None,
             time_step=None,
             resolution=None,
+            save_sfr=False,
     ):
         super().__init__()
         self.num_classes = num_classes
@@ -613,7 +614,8 @@ class Spiking_vit_MetaFormer_Spike_SepConv(nn.Module):
             MemoryRetrieval(embed_dim=embed_dim[i], mlp_ratios=mlp_ratios, resolution=resolution)
             for i in embed_dim_indices
         ])
-        #self.register_spike_rate_hooks()
+        if save_sfr:
+            self.register_spike_rate_hooks()
         self.current_image_idx = 0
         self.spike_rate_dict_temp =  {}
 
@@ -801,16 +803,16 @@ def Efficient_Spiking_Transformer_t(**kwargs):
     return model
 
 
-def build_backbone_temp(cfg):
+def build_backbone_temp(cfg, save_sfr):
 
     if cfg.MODEL.ENCODER.TYPE == 'Efficient_Spiking_Transformer_t':
-        model = Efficient_Spiking_Transformer_t(template_mode=cfg.MODEL.TEMPLATE_MODE, resolution = cfg.DATA.SEARCH.SIZE)
+        model = Efficient_Spiking_Transformer_t(template_mode=cfg.MODEL.TEMPLATE_MODE, resolution = cfg.DATA.SEARCH.SIZE, save_sfr = save_sfr)
     elif cfg.MODEL.ENCODER.TYPE == 'Efficient_Spiking_Transformer_s':
-        model = Efficient_Spiking_Transformer_s(template_mode=cfg.MODEL.TEMPLATE_MODE,resolution = cfg.DATA.SEARCH.SIZE)
+        model = Efficient_Spiking_Transformer_s(template_mode=cfg.MODEL.TEMPLATE_MODE,resolution = cfg.DATA.SEARCH.SIZE, save_sfr = save_sfr)
     elif cfg.MODEL.ENCODER.TYPE == 'Efficient_Spiking_Transformer_m':
-        model = Efficient_Spiking_Transformer_m(template_mode=cfg.MODEL.TEMPLATE_MODE)
+        model = Efficient_Spiking_Transformer_m(template_mode=cfg.MODEL.TEMPLATE_MODE, resolution = cfg.DATA.SEARCH.SIZE, save_sfr = save_sfr)
     elif cfg.MODEL.ENCODER.TYPE == 'Efficient_Spiking_Transformer_l':
-        model = Efficient_Spiking_Transformer_l(template_mode=cfg.MODEL.TEMPLATE_MODE, resolution = cfg.DATA.SEARCH.SIZE)
+        model = Efficient_Spiking_Transformer_l(template_mode=cfg.MODEL.TEMPLATE_MODE, resolution = cfg.DATA.SEARCH.SIZE, save_sfr = save_sfr)
     else:
         raise ValueError('Unknown model type: {}'.format(cfg.MODEL.TYPE))
 

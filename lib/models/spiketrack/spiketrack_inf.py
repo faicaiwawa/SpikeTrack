@@ -12,7 +12,7 @@ from .sdtv3_temp_inference import build_backbone_temp
 
 class SPIKETRACK(nn.Module):
     """ This is the base class for SeqTrack """
-    def __init__(self, encoder, decoder):
+    def __init__(self, encoder, decoder, save_sfr):
         """ Initializes the model.
         Parameters:
             encoder: torch module of the encoder to be used. See encoder.py
@@ -21,8 +21,9 @@ class SPIKETRACK(nn.Module):
         super().__init__()
         self.encoder = encoder
         self.decoder = decoder
+        if save_sfr:
+            self.register_spike_rate_hooks()
         self.spike_rate_dict = {}
-        #self.register_spike_rate_hooks()
 
         self.current_image_idx = 0
     def register_spike_rate_hooks(self):
@@ -34,7 +35,7 @@ class SPIKETRACK(nn.Module):
                         output = output.transpose(0, 2)
 
                     spatial_dims = tuple(range(1, output.ndim))
-                    firing_rates = output.float().mean(dim=spatial_dims) * 4
+                    firing_rates = output.float().mean(dim=spatial_dims) * 4 # if you change the upper limit of quant, you need change this value (4).
 
                     firing_rates = firing_rates.cpu().tolist()
 
@@ -78,7 +79,7 @@ class SPIKETRACK(nn.Module):
 
         out = self.decoder(xz)
         self.reset_image_counter()
-        if len(self.spike_rate_dict)>0 :
+        if len(self.spike_rate_dict) > 0 and self.spike_rate_dict is not None:
             spike_rate_dict = self.spike_rate_dict
         else:
             spike_rate_dict = None
@@ -101,13 +102,14 @@ class MLP(nn.Module):
             x = F.relu(layer(x)) if i < self.num_layers - 1 else layer(x)
         return x
 
-def build_spiketrack(cfg):
+def build_spiketrack(cfg, save_sfr):
     encoder_search = build_backbone_search(cfg)
-    encoder_temp = build_backbone_temp(cfg)
+    encoder_temp = build_backbone_temp(cfg, save_sfr)
     decoder = build_decoder(cfg, cfg.MODEL.HIDDEN_DIM)
     model = SPIKETRACK(
         encoder_search,
         decoder,
+        save_sfr
     )
 
     return model, encoder_temp

@@ -22,7 +22,7 @@ def trackerlist(name: str, parameter_name: str, dataset_name: str, run_ids = Non
     """
     if run_ids is None or isinstance(run_ids, int):
         run_ids = [run_ids]
-    return [Tracker(name, parameter_name, dataset_name, run_id, display_name, result_only) for run_id in run_ids]
+    return [Tracker(name=name, parameter_name=parameter_name, dataset_name=dataset_name, run_id=run_id, display_name=display_name, result_only=result_only) for run_id in run_ids]
 
 
 class Tracker:
@@ -63,11 +63,12 @@ class Tracker:
         else:
             self.tracker_class = None
 
-    def create_tracker(self, params, checkpoint_path):
-        tracker = self.tracker_class(params, self.dataset_name, checkpoint_path)
+    def create_tracker(self, params, checkpoint_path, save_sfr):
+        tracker = self.tracker_class(params, self.dataset_name, checkpoint_path, save_sfr)
+        self.save_sfr = save_sfr
         return tracker
 
-    def run_sequence(self, seq, debug=None, checkpoint_path='.'):
+    def run_sequence(self, seq, debug=None, checkpoint_path='.', save_sfr = False):
         """Run tracker on sequence.
         args:
             seq: Sequence to run the tracker on.
@@ -86,7 +87,7 @@ class Tracker:
         # Get init information
         init_info = seq.init_info()
 
-        tracker = self.create_tracker(params, checkpoint_path)
+        tracker = self.create_tracker(params, checkpoint_path, save_sfr)
 
         output = self._track_sequence(tracker, seq, init_info)
         return output
@@ -138,12 +139,14 @@ class Tracker:
         for frame_num, frame_path in enumerate(seq.frames[1:], start=1):
 
             ''' used for saving spike firing rate'''
-            save_dir = "spike_rate_data"+'_' + tracker.params.yaml_name
-            file_path = os.path.join(save_dir, f"{init_info['seq_name']}_spike_rates.json")
-            file_path_temp = os.path.join(save_dir, f"{init_info['seq_name']}_temp_spike_rates.json")
-            if os.path.exists(file_path) and os.path.exists(file_path_temp):
-                print(f"seq {init_info['seq_name']} has been processed，skip。")
-                break
+            if self.save_sfr:
+                save_dir = "spike_rate_data" + '_' + tracker.params.yaml_name
+                file_path_search = os.path.join(save_dir, 'search', f"{init_info['seq_name']}_spike_rates.json")
+                file_path_temp = os.path.join(save_dir, 'temp', f"{init_info['seq_name']}_spike_rates.json")
+
+                if os.path.exists(file_path_search) and os.path.exists(file_path_temp):
+                    print(f"seq {init_info['seq_name']} has been processed，skip。")
+                    break
 
             image = self._read_image(frame_path)
 
@@ -158,14 +161,15 @@ class Tracker:
             _store_outputs(out, {'time': time.time() - start_time})
 
             ''' used for saving spike firing rate'''
-            # if is_last and spike_rate_dict is not None:
-            #     a = spike_rate_dict #search branch
-            #     a = calculate_average_spike_rates(a)
-            #     save_average_spike_rates(a, init_info['seq_name'], 'spike_rate_data' +'_'+ tracker.params.yaml_name )
-            #
-            #     a = spike_rate_dict_temp # template branch
-            #     a = calculate_average_spike_rates(a)
-            #     save_average_spike_rates(a, init_info['seq_name']+'_temp', 'spike_rate_data' + '_'+tracker.params.yaml_name)
+            if self.save_sfr:
+                if is_last and spike_rate_dict is not None:
+                    a = spike_rate_dict #search branch
+                    a = calculate_average_spike_rates(a)
+                    save_average_spike_rates(a, init_info['seq_name'], 'spike_rate_data' +'_'+ tracker.params.yaml_name,  branch_type='search')
+
+                    a = spike_rate_dict_temp # template branch
+                    a = calculate_average_spike_rates(a)
+                    save_average_spike_rates(a, init_info['seq_name']+'_temp', 'spike_rate_data' + '_'+tracker.params.yaml_name, branch_type='template')
 
         for key in ['target_bbox', 'all_boxes', 'all_scores']:
             if key in output and len(output[key]) <= 1:
@@ -335,20 +339,26 @@ import json
 import os
 import time
 
-def save_average_spike_rates(average_rates, video_name, save_dir="spike_rate_data"):
+
+def save_average_spike_rates(average_rates, video_name, save_dir="spike_rate_data", branch_type=None):
     """
     save average spike rates as json
     Args:
         average_rates: {layer_name: [avg_rate_t0, avg_rate_t1, ...]}
         video_name: as file name
         save_dir: save dir
+        branch_type: 'search' or 'temp' to create separate subdirectories
     """
+    if branch_type:
+        save_dir = os.path.join(save_dir, branch_type)
+
     os.makedirs(save_dir, exist_ok=True)
 
     file_path = os.path.join(save_dir, f"{video_name}_spike_rates.json")
 
     data = {
         'video_name': video_name,
+        'branch_type': branch_type,
         'average_rates': average_rates,
         'timestamp': time.time(),
         'save_time': time.strftime('%Y-%m-%d %H:%M:%S')

@@ -89,6 +89,22 @@ python lib/test/utils/transform_trackingnet.py --tracker_name spiketrack --cfg_n
 ```
 
 
+## How to calculate Spike Firing Rate ?
+for example get the avg SFR on GOT-10K:
+
+STEP 1:
+```
+python tracking/test.py spiketrack spiketrack_b256_t3 --dataset got10k_test --threads 16 --num_gpus 4 --checkpoint_path ./ckpt/spiketrack_b256_t3.pth.tar  --inference_mode True --save_sfr True
+```
+you will get the avg SFR (json format) of each sequence in ./tracking/spiketrack_b256_t3/
+
+STEP 2:
+
+
+```
+python tracking/get_avg_sfr.py
+```
+this script will calculate the average SFR  of all JSON files in the folder, so you can get the average SFR of the got10k_test set.
 
 ## Acknowledgments
 * Thanks for the [SeqTrack](https://github.com/microsoft/VideoX/blob/master/SeqTrack/README.md) and [PyTracking](https://github.com/visionml/pytracking) library, which helps us to quickly implement our ideas. 

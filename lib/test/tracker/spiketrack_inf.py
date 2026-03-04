@@ -16,9 +16,9 @@ from PIL import Image
 import matplotlib.pyplot as plt
 
 class SpikeTrack(BaseTracker):
-    def __init__(self, params, dataset_name, checkpoint_path):
+    def __init__(self, params, dataset_name, checkpoint_path, save_sfr):
         super(SpikeTrack, self).__init__(params)
-        network, encoder_temp = build_spiketrack(params.cfg)
+        network, encoder_temp = build_spiketrack(params.cfg, save_sfr)
         print("run at inference mode  !!!!!!!!!!!!!")
         print("load checkpoint from : {}".format(checkpoint_path))
         res_1 = network.load_state_dict(torch.load(checkpoint_path, map_location='cpu')['net'], strict=False)

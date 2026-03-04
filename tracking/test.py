@@ -15,7 +15,7 @@ from lib.test.evaluation.running import run_dataset
 from lib.test.evaluation.tracker import Tracker
 
 def run_tracker(tracker_name, tracker_param, run_id=None, dataset_name='otb', sequence=None, debug=0, threads=0,
-                num_gpus=8,checkpoint_path='.', inference_mode = False):
+                num_gpus=8,checkpoint_path='.', inference_mode = False, save_sfr = False):
     """Run tracker on sequence or dataset.
     args:
         tracker_name: Name of tracking method.
@@ -34,7 +34,7 @@ def run_tracker(tracker_name, tracker_param, run_id=None, dataset_name='otb', se
 
     trackers = [Tracker(tracker_name, tracker_param, dataset_name, run_id, inference_mode)]
     print('test.py start')
-    run_dataset(dataset, trackers, debug, threads, num_gpus=num_gpus, checkpoint_path = checkpoint_path)
+    run_dataset(dataset, trackers, debug, threads, num_gpus=num_gpus, checkpoint_path = checkpoint_path, save_sfr= save_sfr)
 
 
 def main():
@@ -49,6 +49,7 @@ def main():
     parser.add_argument('--num_gpus', type=int, default=8) 
     parser.add_argument('--checkpoint_path', type=str, default='./ckpt/spiketrack_b256_t3.pth.tar')
     parser.add_argument('--inference_mode', type=bool, default=True, help='Inference mode.')
+    parser.add_argument('--save_sfr', type=bool, default=False, help='saving spike firing rate.')
     args = parser.parse_args()
 
     try:
@@ -57,7 +58,7 @@ def main():
         seq_name = args.sequence
 
     run_tracker(args.tracker_name, args.tracker_param, args.runid, args.dataset_name, seq_name, args.debug,
-                args.threads, num_gpus=args.num_gpus, checkpoint_path = args.checkpoint_path, inference_mode = args.inference_mode)
+                args.threads, num_gpus=args.num_gpus, checkpoint_path = args.checkpoint_path, inference_mode = args.inference_mode, save_sfr = args.save_sfr)
 
 
 if __name__ == '__main__':
