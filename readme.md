@@ -96,13 +96,13 @@ STEP 1:
 ```
 python tracking/test.py spiketrack spiketrack_b256_t3 --dataset got10k_test --threads 16 --num_gpus 4 --checkpoint_path ./ckpt/spiketrack_b256_t3.pth.tar  --inference_mode True --save_sfr True
 ```
-you will get the avg SFR (json format) of each sequence in ./tracking/spiketrack_b256_t3/
+you will get the avg SFR (json format) of each sequence in './tracking/spiketrack_b256_t3/search' and  './tracking/spiketrack_b256_t3/template'.
 
 STEP 2:
 
 
 ```
-python tracking/get_avg_sfr.py
+python tracking/get_avg_sfr.py # need to modify folder address of the JSON file
 ```
 this script will calculate the average SFR  of all JSON files in the folder, so you can get the average SFR of the got10k_test set.
 
