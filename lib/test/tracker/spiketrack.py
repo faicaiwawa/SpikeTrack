@@ -12,7 +12,7 @@ import numpy as np
 
 
 class SPIKETRACK(BaseTracker):
-    def __init__(self, params, dataset_name, checkpoint_path):
+    def __init__(self, params, dataset_name, checkpoint_path, save_sfr):
         super(SPIKETRACK, self).__init__(params)
         network = build_spiketrack(params.cfg)
         print("load checkpoint from : {}".format(checkpoint_path))

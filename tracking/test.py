@@ -48,8 +48,8 @@ def main():
     parser.add_argument('--threads', type=int, default=8, help='Number of threads.')
     parser.add_argument('--num_gpus', type=int, default=8) 
     parser.add_argument('--checkpoint_path', type=str, default='./ckpt/spiketrack_b256_t3.pth.tar')
-    parser.add_argument('--inference_mode', type=bool, default=True, help='Inference mode.')
-    parser.add_argument('--save_sfr', type=bool, default=False, help='saving spike firing rate.')
+    parser.add_argument('--inference_mode', type=lambda x: (str(x).lower() == 'true'), default=True,help='Inference mode.')
+    parser.add_argument('--save_sfr', type=lambda x: (str(x).lower() == 'true'), default=False,help='saving spike firing rate.')
     args = parser.parse_args()
 
     try:
