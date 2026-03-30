@@ -200,7 +200,7 @@ class MS_Attention_linear_3d(nn.Module):
         else:
             raise ValueError(f"Unsupported branch: {branch}")
 
-        x = x.view(T, B, C, H, W)  # ← 确保 reshape 回 5D
+        x = x.view(T, B, C, H, W)  
         return x
 
     def forward(self, x, branch):
