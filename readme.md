@@ -89,6 +89,14 @@ python lib/test/utils/transform_trackingnet.py --tracker_name spiketrack --cfg_n
 ```
 
 
+## Video Demo
+
+```
+python tracking/run_video_demo.py spiketrack spiketrack_b256_t1  --ckpt_path ./ckpt/spiketrack_b256_t1.pth.tar  
+```
+Draw a box for the object you want to track, and then press the space bar.
+
+
 ## How to calculate Spike Firing Rate ?
 for example get the avg SFR on GOT-10K:
 

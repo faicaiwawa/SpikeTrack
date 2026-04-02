@@ -177,7 +177,7 @@ class Tracker:
 
         return output
 
-    def run_video(self, videofilepath, optional_box=None, debug=None, visdom_info=None, save_results=False):
+    def run_video(self, videofilepath, optional_box=None, debug=None, visdom_info=None, save_results=False, ckpt_path=None, save_sfr=False):
         """Run the tracker with the vieofile.
         args:
             debug: Debug level.
@@ -197,7 +197,7 @@ class Tracker:
         multiobj_mode = getattr(params, 'multiobj_mode', getattr(self.tracker_class, 'multiobj_mode', 'default'))
 
         if multiobj_mode == 'default':
-            tracker = self.create_tracker(params)
+            tracker = self.create_tracker(params,ckpt_path,save_sfr)
 
         elif multiobj_mode == 'parallel':
             tracker = MultiObjectWrapper(self.tracker_class, params, self.visdom, fast_load=True)
@@ -250,7 +250,7 @@ class Tracker:
             frame_disp = frame.copy()
 
             # Draw box
-            out = tracker.track(frame)
+            out, _, _ = tracker.track(frame)
             state = [int(s) for s in out['target_bbox']]
             output_boxes.append(state)
 
